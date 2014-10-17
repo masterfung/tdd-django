@@ -42,6 +42,8 @@ class NewVisitorTest(LiveServerTestCase):
         # When he hits enter, the page updates, and now the page lists
         # "1: Buy peacock feathers" as an item in a to-do list table
         inputbox.send_keys(Keys.ENTER)
+        joe_list_url = self.browser.current_url
+        self.assertRegex(joe_list_url, '/lists/.+')
         self.check_for_now_in_list_table('1: Buy peacock feathers')
 
         # There is still a text box inviting him to add another item. He
@@ -53,7 +55,42 @@ class NewVisitorTest(LiveServerTestCase):
         self.check_for_now_in_list_table('1: Buy peacock feathers')
         self.check_for_now_in_list_table('2: Peacock is the magic to all!')
 
-        self.fail('Finish the test!')
+
 
         # The page updates again, and now shows both items on his list
+        self.check_for_now_in_list_table('2: Peacock is the magic to all!')
+        self.check_for_now_in_list_table('1: Buy peacock feathers')
+
+        # All of a sudden, a new user, Jared appears on the site.
+
+        ## We start a new browser session to make sure that no information from
+        ## Joe's session is coming through via the cookies
+        self.browser.quit()
+        self.browser = webdriver.Firefox()
+
+        # Jared visits the home page and did not see Joes's list
+        self.browser.get(self.live_server_url)
+        page_text = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn('Buy peacock feathers', page_text)
+        self.assertNotIn('Peacock is the magic to all!', page_text)
+
+        # Jared starts his own personal list by entering a new item.
+        # He is an interesting man!
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox.send_keys('Go to the gym!')
+        inputbox.send_keys(Keys.ENTER)
+
+        # Jared gets his own unique URL
+        jared_list_url = self.browser.current_url
+        self.assertRegex(jared_list_url, '/lists/.+')
+        self.assertNotEqual(jared_list_url, joe_list_url)
+
+        # Again, this only indicates that Joe's personal peacock
+        # list does not exist!
+        page_text = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn('Buy peacock feathers', page_text)
+        self.assertIn('Go to the gym!', page_text)
+
+        self.fail('Finish the test!')
+
 
