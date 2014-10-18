@@ -1,2 +1,4 @@
 db.sqlite3
 *.pyc
+/.idea
+test_driven/local_settings.py

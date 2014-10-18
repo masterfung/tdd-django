@@ -2,19 +2,20 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
+import django.utils.timezone
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('lists', '0002_auto_20141017_1627'),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='List',
+            name='User',
             fields=[
-                ('id', models.AutoField(serialize=False, verbose_name='ID', primary_key=True, auto_created=True)),
+                ('email', models.EmailField(max_length=75, serialize=False, primary_key=True)),
+                ('last_login', models.DateTimeField(default=django.utils.timezone.now)),
             ],
             options={
             },
