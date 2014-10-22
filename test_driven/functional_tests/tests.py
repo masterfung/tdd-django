@@ -1,8 +1,8 @@
-__author__ = 'htm'
 import sys
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+
 
 
 class NewVisitorTest(StaticLiveServerTestCase):
